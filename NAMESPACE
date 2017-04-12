@@ -2,4 +2,5 @@
 
 export(dgnorm)
 export(pgnorm)
+export(qgnorm)
 export(rgnorm)
