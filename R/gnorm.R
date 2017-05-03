@@ -29,9 +29,7 @@ dgnorm <- function(x, mu = 0, alpha = 1, beta = 1, log = FALSE) {
   if (!log) {
     return(exp(-(abs(x - mu)/alpha)^beta)*beta/(2*alpha*gamma(1/beta)))
   } else {
-    if (!log) {
-      return(-(abs(x - mu)/alpha)^beta + log(beta) - (log(2) + log(alpha) + log(gamma(1/beta))))
-    }
+    return(-(abs(x - mu)/alpha)^beta + log(beta) - (log(2) + log(alpha) + log(gamma(1/beta))))
   }
 }
 #' @export
