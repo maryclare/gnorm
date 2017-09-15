@@ -1,0 +1,47 @@
+---
+title: "Working with the Exponential Power Distribution Using `gnorm`"
+author: "Maryclare Griffin"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Working with the Exponential Power Distribution Using `gnorm`}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+The exponential power distribution, also known as the [generalized normal distribution](https://en.wikipedia.org/wiki/Generalized_normal_distribution), was first described a very long time ago in Subbotin (1923)^[[M. T. Subbotin. "On the Law of Frequency of Error." Mat. Sb. 31.2 (1923), 206-301.](http://www.mathnet.ru/php/archive.phtml?wshow=paper&jrnid=sm&paperid=6854&option_lang=eng)] and rediscovered as the generalized normal distribution in Nadarajah (2005)^[[Nadarajah, Saralees. "A generalized normal distribution." Journal of Applied Statistics 32.7 (2005):685-694.](http://www.tandfonline.com/doi/abs/10.1080/02664760500079464)]. It generalizes the Laplace, normal and uniform distributions and is pretty easy to work with in many ways, so it can be very useful. Accordingly, I've made a little `R` package called `gnorm` that provides density, CDF and quantile functions for the exponential power distribution as well as random variate generation. We can load the package from GitHub as follows:
+```{r, message = FALSE}
+library(devtools)
+install_github("maryclare/gnorm")
+library(gnorm)
+```
+
+Since we're going to be generating some random variables, we should also set a seed:
+```{r}
+set.seed(100)
+```
+
+# Exponential Power Density
+
+An exponential power distributed random variable, $x$, has the following density:
+
+$$
+p(x | \mu, \alpha, \beta) = \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{x - \mu}{\alpha})^\beta\},
+$$
+where $\mu$ is the mean of $x$ and $\alpha > 0$ and $\beta > 0$ are scale and shape parameters.
+
+The function `dgnorm` gives the exponential power density evaluated at specified values of $x$, $\mu$, $\alpha$ and $\beta$.
+
+```{r}
+dgnorm(x = 1, mu = 0, alpha = 1, beta = 1)
+```
+
+
+An aside - this is not my preferred way of parametrizing the exponential power density. I prefer to replace $\alpha$ and $\beta$ with the standard deviation of $x$, $\sigma$, and a shape parameter $q$:
+$$
+p(x | \mu, \sigma, q) = \frac{q}{2\tau}\sqrt{\frac{\Gamma(3/q)}{\Gamma(1/q)^3}}\text{exp}\{-(\frac{\Gamma(3/q)}{\Gamma(1/q)})^{q/2}(\frac{x - \mu}{\sigma})^q\}
+$$
+
+That said, the parametrization using $\alpha$ and $\beta$ is the one featured on Wikipedia so realistically, it's the one everyone will find when they look up this distribution, so I'll use the $\alpha$ and $\beta$ parametrization for the rest of the vignette.

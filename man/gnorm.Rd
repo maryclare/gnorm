@@ -8,7 +8,7 @@
 \alias{rgnorm}
 \title{The generalized normal distribution}
 \source{
-\code{dgnorm}, \code{pgnorm}, \code{qgnorm} and\code{rgnorm} are all parametrized as in Version 1 of the following: https://en.wikipedia.org/wiki/Generalized_normal_distribution
+\code{dgnorm}, \code{pgnorm}, \code{qgnorm} and\code{rgnorm} are all parametrized as in Version 1 of the \href{https://en.wikipedia.org/wiki/Generalized_normal_distribution}{Generalized Normal Distribution Wikipedia page}.
 Functions and documentation modeled after GammaDist functions
 }
 \usage{
@@ -31,5 +31,8 @@ Functions and documentation modeled after GammaDist functions
 \item{\code{beta}}{shape parameter}
 }
 \description{
-Density, distribution function and random generation for the generalized normal distribution
+Density, distribution function and random generation for the generalized normal/exponential power distribution. \cr \cr
+A generalized normal random variable \eqn{x} with parameters \eqn{\mu}, \eqn{\alpha > 0} and \eqn{\beta > 0} has density:\cr
+\deqn{p(x) = \beta exp{-(|x - \mu|/\alpha)^\beta}/(2\alpha \Gamma(1/\beta)).} \cr
+The mean and variance of \eqn{x} are \eqn{\mu} and \eqn{\alpha^2 \Gamma(3/\beta)/\Gamma(1/\beta)}, respectively.
 }
