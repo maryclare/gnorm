@@ -26,15 +26,15 @@ set.seed(100)
 An exponential power distributed random variable, $x$, has the following density:
 
 $$
-p(x | \mu, \alpha, \beta) = \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{x - \mu}{\alpha})^\beta\},
+p(x | \mu, \alpha, \beta) = \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{|x - \mu|}{\alpha})^\beta\},
 $$
 where $\mu$ is the mean of $x$ and $\alpha > 0$ and $\beta > 0$ are scale and shape parameters.
 
-The function `dgnorm` gives the exponential power density given above, $p(x | \mu, \alpha, \beta)$, evaluated at specified values of $x$, $\mu$, $\alpha$ and $\beta$. Below, we give an example of evaluating the exponential power density at $\mu = 0$, $\alpha = 1/2$ and $\beta = 2$. Note that this is in fact the standard normal density!
+The function `dgnorm` gives the exponential power density given above, $p(x | \mu, \alpha, \beta)$, evaluated at specified values of $x$, $\mu$, $\alpha$ and $\beta$. Below, we give an example of evaluating the exponential power density using `dgnorm` at $\mu = 0$, $\alpha = \sqrt{2}$ and $\beta = 2$. Note that this is in fact the standard normal density!
 
 ```{r, fig.show='hold', fig.align = 'center', fig.width = 4, fig.height = 4}
 xs <- seq(-1, 1, length.out = 100)
-plot(xs, dgnorm(xs, mu = 0, alpha = 1/2, beta = 2), type = "l", 
+plot(xs, dgnorm(xs, mu = 0, alpha = sqrt(2), beta = 2), type = "l", 
      xlab = "x", ylab = expression(p(x)))
 ```
 
@@ -44,18 +44,45 @@ Like `dnorm`, `dgnorm` has a `log` argument, with the default `log=FALSE`. When 
 #### An Aside on Parametrizing the Exponential Power Distribution
 This is not necessarily the most natural way to parametrize the exponential power density. One can replace $\alpha$ and $\beta$ with the standard deviation of $x$, $\sigma$, and a shape parameter $q$:
 $$
-p(x | \mu, \sigma, q) = \frac{q}{2\tau}\sqrt{\frac{\Gamma(3/q)}{\Gamma(1/q)^3}}\text{exp}\{-(\frac{\Gamma(3/q)}{\Gamma(1/q)})^{q/2}(\frac{x - \mu}{\sigma})^q\}
+p(x | \mu, \sigma, q) = \frac{q}{2\tau}\sqrt{\frac{\Gamma(3/q)}{\Gamma(1/q)^3}}\text{exp}\{-(\frac{\Gamma(3/q)}{\Gamma(1/q)})^{q/2}(\frac{|x - \mu|}{\sigma})^q\}
 $$
 
 This is similar but not identically to the parametrization preferred by Box and Tiao (1973)^[[G. E. P. Box and G. C. Tiao. "Bayesian inference in Statistical Analysis." Addison-Wesley Pub. Co., Reading, Mass (1973).](http://onlinelibrary.wiley.com/book/10.1002/9781118033197)]. That said, the parametrization using $\alpha$ and $\beta$ is the one featured on Wikipedia so realistically, it's the one everyone will find when they look up this distribution, so we'll use the $\alpha$ and $\beta$ parametrization for the rest of the vignette.
 
 ### Exponential Power CDF, `pgnorm`
 
-The default settings of `pgnorm` return:
+The exponential power CDF is derived as follows:
 $$
-p(x \leq c | \mu, \alpha, \beta) = \int_{-\infty}^c \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{x - \mu}{\alpha})^\beta\} d x \\\
-=\int_{-\infty}^{c - \mu} \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta z^\beta \} d z
+\begin{aligned}
+\text{Pr}(x \leq q | \mu, \alpha, \beta) &= \int_{-\infty}^q \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{|x - \mu|}{\alpha})^\beta\} d x \\
+&=\int_{-\infty}^{q - \mu} \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta |z|^\beta \} d z \\
+&=\Bigg\{\begin{array}{cc} \int_{-\infty}^{q - \mu} \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta \left(-z\right)^\beta \} d z & q \leq \mu \\
+\int_{-\infty}^{0} \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta (-z)^\beta + \int_{0}^{q - \mu} \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta z^\beta \} d z & q > \mu \\
+\end{array} \\
+&=\Bigg\{\begin{array}{cc} \int_{-(q - \mu)}^{\infty} \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta z^\beta \} d z & q \leq \mu \\
+\int_{0}^{\infty} \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta z^\beta dz + \int_{0}^{q - \mu} \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta z^\beta \} dz  & q > \mu \\
+\end{array} \\
+&=\Bigg\{\begin{array}{cc} \int_{0}^{\infty} \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta z^\beta \} d z - \int_{0}^{-(q - \mu)} \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta z^\beta \} d z& q \leq \mu \\
+\int_{0}^{\infty} \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta z^\beta\} dz+ \int_{0}^{q - \mu} \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta z^\beta \} d z & q > \mu \\
+\end{array} \\
+&= \int_{0}^{\infty} \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta z^\beta \}dz+ \text{sign}(q - \mu) \int_{0}^{|q - \mu|} \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta z^\beta \} d z \\
+&= \int_{0}^{\infty} \frac{w^{1/\beta - 1}}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta w \}dw+ \text{sign}(q - \mu) \int_{0}^{|q - \mu|^\beta} \frac{w^{1/\beta - 1}}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta w \} d w && z^\beta = w \\
+&= \frac{1}{2}+ \frac{\text{sign}(q - \mu)}{2} \underbrace{\int_{0}^{|q - \mu|^\beta} \frac{w^{1/\beta - 1}}{\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta w \} d w}_{\text{Gamma CDF, Shape=$\frac{1}{\beta}$, Rate=$(\frac{1}{\alpha})^\beta$}} 
+\end{aligned}
 $$
+We can evaluate the exponential power CDF using the gamma CDF -  the `pgamma` function evaluates the CDF of a gamma distribution with parameters $\frac{1}{\beta}$ and $(\frac{1}{\alpha})^\beta$ at $|q - \mu|^\beta$.
+
+The function `pgnorm` returns the value of the CDF for specified values of $q$, $\mu$, $\alpha$ and $\beta$. Like the corresponding `pnorm` function, it also has the following arguments:
+
+* `log.p`, which returns the log probability when set to `TRUE`. The default is `log.p=FALSE`;
+* `lower.tail`, which returns $\text{Pr}(x > q | \mu, \alpha, \beta)$ when set to `FALSE`. The fault is `lower.tail=TRUE`.
+
+Below, we give an example of evaluating the exponential power CDF using `pgnorm` at $\mu = 0$, $\alpha = \sqrt{2}$ and $\beta = 2$. As in the previous example - this is the standard normal CDF.
+
+```{r, fig.show='hold', fig.align = 'center', fig.width = 4, fig.height = 4}
+xs <- seq(-1, 1, length.out = 100)
+plot(xs, pgnorm(xs, 0, sqrt(2), 2), type = "l", xlab = "q", ylab = expression(paste("Pr(", x<=q, ")", sep = "")))
+```
 
 ### Exponential Power Quantile Function (Inverse CDF), `qgnorm`
 

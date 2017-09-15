@@ -14,7 +14,7 @@
 #' \code{qgnorm(p, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE, log.p = FALSE)}
 #' \code{rgnorm(n, mu = 0, alpha = 1, beta = 1)}
 #'
-#' @param \code{x} vector of quantiles
+#' @param \code{x, q} vector of quantiles
 #' @param \code{p} vector of probabilities
 #' @param \code{n} number of observations
 #' @param \code{mu} location parameter
@@ -44,7 +44,7 @@ pgnorm <- function(x, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE,
     cat("Not defined for negative values of alpha and/or beta.\n")
     return(rep(NaN, length(x)))
   }
-  p <- 1/2 + sign(x - mu)*(pgamma((abs(x - mu)/alpha)^beta, 1/beta))/(2*gamma(1/beta))
+  p <- 1/2 + sign(x - mu)*pgamma(abs(x - mu)^beta, shape = 1/beta, rate = (1/alpha)^beta)/2
   if (lower.tail) {
     if (!log.p) {
       return(p)
