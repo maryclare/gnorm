@@ -6,6 +6,8 @@ library(gnorm)
 ## ------------------------------------------------------------------------
 set.seed(100)
 
-## ------------------------------------------------------------------------
-dgnorm(x = 1, mu = 0, alpha = 1, beta = 1)
+## ---- fig.show='hold', fig.align = 'center', fig.width = 4, fig.height = 4----
+xs <- seq(-1, 1, length.out = 100)
+plot(xs, dgnorm(xs, mu = 0, alpha = 1/2, beta = 2), type = "l", 
+     xlab = "x", ylab = expression(p(x)))
 

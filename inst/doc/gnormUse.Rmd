@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-The exponential power distribution, also known as the [generalized normal distribution](https://en.wikipedia.org/wiki/Generalized_normal_distribution), was first described a very long time ago in Subbotin (1923)^[[M. T. Subbotin. "On the Law of Frequency of Error." Mat. Sb. 31.2 (1923), 206-301.](http://www.mathnet.ru/php/archive.phtml?wshow=paper&jrnid=sm&paperid=6854&option_lang=eng)] and rediscovered as the generalized normal distribution in Nadarajah (2005)^[[Nadarajah, Saralees. "A generalized normal distribution." Journal of Applied Statistics 32.7 (2005):685-694.](http://www.tandfonline.com/doi/abs/10.1080/02664760500079464)]. It generalizes the Laplace, normal and uniform distributions and is pretty easy to work with in many ways, so it can be very useful. Accordingly, I've made a little `R` package called `gnorm` that provides density, CDF and quantile functions for the exponential power distribution as well as random variate generation. We can load the package from GitHub as follows:
+The exponential power distribution, also known as the [generalized normal distribution](https://en.wikipedia.org/wiki/Generalized_normal_distribution), was first described in Subbotin (1923)^[[M. T. Subbotin. "On the Law of Frequency of Error." Mat. Sb. 31.2 (1923), 206-301.](http://www.mathnet.ru/php/archive.phtml?wshow=paper&jrnid=sm&paperid=6854&option_lang=eng)] and rediscovered as the generalized normal distribution in Nadarajah (2005)^[[Nadarajah, Saralees. "A generalized normal distribution." Journal of Applied Statistics 32.7 (2005):685-694.](http://www.tandfonline.com/doi/abs/10.1080/02664760500079464)]. It generalizes the Laplace, normal and uniform distributions and is pretty easy to work with in many ways, so it can be very useful. Accordingly, I've made a little `R` package called `gnorm` that provides density, CDF and quantile functions for the exponential power distribution as well as random variate generation that are analogous to `dnorm`, `pnorm`, `qnorm` and `rnorm`. We can load the package from GitHub as follows:
 ```{r, message = FALSE}
 library(devtools)
 install_github("maryclare/gnorm")
@@ -21,7 +21,7 @@ Since we're going to be generating some random variables, we should also set a s
 set.seed(100)
 ```
 
-# Exponential Power Density
+### Exponential Power Density, `dgnorm`
 
 An exponential power distributed random variable, $x$, has the following density:
 
@@ -30,16 +30,43 @@ p(x | \mu, \alpha, \beta) = \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\
 $$
 where $\mu$ is the mean of $x$ and $\alpha > 0$ and $\beta > 0$ are scale and shape parameters.
 
-The function `dgnorm` gives the exponential power density evaluated at specified values of $x$, $\mu$, $\alpha$ and $\beta$.
+The function `dgnorm` gives the exponential power density given above, $p(x | \mu, \alpha, \beta)$, evaluated at specified values of $x$, $\mu$, $\alpha$ and $\beta$. Below, we give an example of evaluating the exponential power density at $\mu = 0$, $\alpha = 1/2$ and $\beta = 2$. Note that this is in fact the standard normal density!
 
-```{r}
-dgnorm(x = 1, mu = 0, alpha = 1, beta = 1)
+```{r, fig.show='hold', fig.align = 'center', fig.width = 4, fig.height = 4}
+xs <- seq(-1, 1, length.out = 100)
+plot(xs, dgnorm(xs, mu = 0, alpha = 1/2, beta = 2), type = "l", 
+     xlab = "x", ylab = expression(p(x)))
 ```
 
+Like `dnorm`, `dgnorm` has a `log` argument, with the default `log=FALSE`. When `log=TRUE` is specified, $\text{log}p(x | \mu, \alpha, \beta)$ is returned.
 
-An aside - this is not my preferred way of parametrizing the exponential power density. I prefer to replace $\alpha$ and $\beta$ with the standard deviation of $x$, $\sigma$, and a shape parameter $q$:
+
+#### An Aside on Parametrizing the Exponential Power Distribution
+This is not necessarily the most natural way to parametrize the exponential power density. One can replace $\alpha$ and $\beta$ with the standard deviation of $x$, $\sigma$, and a shape parameter $q$:
 $$
 p(x | \mu, \sigma, q) = \frac{q}{2\tau}\sqrt{\frac{\Gamma(3/q)}{\Gamma(1/q)^3}}\text{exp}\{-(\frac{\Gamma(3/q)}{\Gamma(1/q)})^{q/2}(\frac{x - \mu}{\sigma})^q\}
 $$
 
-This is similar but not identically to the parametrization preferred by Box and Tiao (1973)^[[G. E. P. Box and G. C. Tiao. "Bayesian inference in Statistical Analysis." Addison-Wesley Pub. Co., Reading, Mass (1973).](http://onlinelibrary.wiley.com/book/10.1002/9781118033197)]. That said, the parametrization using $\alpha$ and $\beta$ is the one featured on Wikipedia so realistically, it's the one everyone will find when they look up this distribution, so I'll use the $\alpha$ and $\beta$ parametrization for the rest of the vignette.
+This is similar but not identically to the parametrization preferred by Box and Tiao (1973)^[[G. E. P. Box and G. C. Tiao. "Bayesian inference in Statistical Analysis." Addison-Wesley Pub. Co., Reading, Mass (1973).](http://onlinelibrary.wiley.com/book/10.1002/9781118033197)]. That said, the parametrization using $\alpha$ and $\beta$ is the one featured on Wikipedia so realistically, it's the one everyone will find when they look up this distribution, so we'll use the $\alpha$ and $\beta$ parametrization for the rest of the vignette.
+
+### Exponential Power CDF, `pgnorm`
+
+The default settings of `pgnorm` return:
+$$
+p(x \leq c | \mu, \alpha, \beta) & = \int_{-\infty}^c \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{x - \mu}{\alpha})^\beta\} d x \\\
+& =\int_{-\infty}^{c - \mu} \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta z^\beta \} d z
+$$
+
+### Exponential Power Quantile Function (Inverse CDF), `qgnorm`
+
+### Exponential Power Random Variate Generate, `rgnorm`
+
+There are several ways to generate draws from the exponential power distribution. One approach is to use a known uniform scale mixture represenation of $x$. When $x$ has an exponential power distribution with parameters $\mu$, $\alpha$ and $\beta$, 
+Alternatively, exponential power random variates can be generated by drawing from the uniform distribution on $0-1$ and using the inverse CDF function, `qgnorm`.
+
+However, both of these approaches can be unstable because they involve evaluation of $\Gamma(1/\beta)$. The `R` function `gamma` evaluates this quantity to $+\infty$ when $\beta \leq 0.005$.
+Instead, `rgnorm` generates exponential power random variates as follows:
+
+
+
+
