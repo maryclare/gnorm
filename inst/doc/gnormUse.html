@@ -74,15 +74,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<div id="introduction" class="section level1">
-<h1>Introduction</h1>
 <p>The exponential power distribution, also known as the <a href="https://en.wikipedia.org/wiki/Generalized_normal_distribution">generalized normal distribution</a>, was first described a very long time ago in Subbotin (1923)<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> and rediscovered as the generalized normal distribution in Nadarajah (2005)<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>. It generalizes the Laplace, normal and uniform distributions and is pretty easy to work with in many ways, so it can be very useful. Accordingly, I’ve made a little <code>R</code> package called <code>gnorm</code> that provides density, CDF and quantile functions for the exponential power distribution as well as random variate generation. We can load the package from GitHub as follows:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(devtools)
 <span class="kw">install_github</span>(<span class="st">&quot;maryclare/gnorm&quot;</span>)
 <span class="kw">library</span>(gnorm)</code></pre></div>
 <p>Since we’re going to be generating some random variables, we should also set a seed:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">100</span>)</code></pre></div>
-</div>
 <div id="exponential-power-density" class="section level1">
 <h1>Exponential Power Density</h1>
 <p>An exponential power distributed random variable, <span class="math inline">\(x\)</span>, has the following density:</p>
@@ -95,13 +92,14 @@ p(x | \mu, \alpha, \beta) = \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\
 <p>An aside - this is not my preferred way of parametrizing the exponential power density. I prefer to replace <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> with the standard deviation of <span class="math inline">\(x\)</span>, <span class="math inline">\(\sigma\)</span>, and a shape parameter <span class="math inline">\(q\)</span>: <span class="math display">\[
 p(x | \mu, \sigma, q) = \frac{q}{2\tau}\sqrt{\frac{\Gamma(3/q)}{\Gamma(1/q)^3}}\text{exp}\{-(\frac{\Gamma(3/q)}{\Gamma(1/q)})^{q/2}(\frac{x - \mu}{\sigma})^q\}
 \]</span></p>
-<p>That said, the parametrization using <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> is the one featured on Wikipedia so realistically, it’s the one everyone will find when they look up this distribution, so I’ll use the <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> parametrization for the rest of the vignette.</p>
+<p>This is similar but not identically to the parametrization preferred by Box and Tiao (1973)<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>. That said, the parametrization using <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> is the one featured on Wikipedia so realistically, it’s the one everyone will find when they look up this distribution, so I’ll use the <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> parametrization for the rest of the vignette.</p>
 </div>
 <div class="footnotes">
 <hr />
 <ol>
 <li id="fn1"><p><a href="http://www.mathnet.ru/php/archive.phtml?wshow=paper&amp;jrnid=sm&amp;paperid=6854&amp;option_lang=eng">M. T. Subbotin. “On the Law of Frequency of Error.” Mat. Sb. 31.2 (1923), 206-301.</a><a href="#fnref1">↩</a></p></li>
 <li id="fn2"><p><a href="http://www.tandfonline.com/doi/abs/10.1080/02664760500079464">Nadarajah, Saralees. “A generalized normal distribution.” Journal of Applied Statistics 32.7 (2005):685-694.</a><a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p><a href="http://onlinelibrary.wiley.com/book/10.1002/9781118033197">G. E. P. Box and G. C. Tiao. “Bayesian inference in Statistical Analysis.” Addison-Wesley Pub. Co., Reading, Mass (1973).</a><a href="#fnref3">↩</a></p></li>
 </ol>
 </div>
 
