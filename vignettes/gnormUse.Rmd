@@ -53,8 +53,8 @@ This is similar but not identically to the parametrization preferred by Box and 
 
 The default settings of `pgnorm` return:
 $$
-p(x \leq c | \mu, \alpha, \beta) & = \int_{-\infty}^c \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{x - \mu}{\alpha})^\beta\} d x \\\
-& =\int_{-\infty}^{c - \mu} \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta z^\beta \} d z
+p(x \leq c | \mu, \alpha, \beta) = \int_{-\infty}^c \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{x - \mu}{\alpha})^\beta\} d x \\\
+=\int_{-\infty}^{c - \mu} \frac{\beta}{2\alpha \Gamma(1/\beta)}\text{exp}\{-(\frac{1}{\alpha})^\beta z^\beta \} d z
 $$
 
 ### Exponential Power Quantile Function (Inverse CDF), `qgnorm`
