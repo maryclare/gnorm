@@ -8,27 +8,35 @@
 \alias{rgnorm}
 \title{The generalized normal distribution}
 \source{
-\code{dgnorm}, \code{pgnorm}, \code{qgnorm} and\code{rgnorm} are all parametrized as in Version 1 of the \href{https://en.wikipedia.org/wiki/Generalized_normal_distribution}{Generalized Normal Distribution Wikipedia page}.
-Functions and documentation modeled after GammaDist functions
+\code{dgnorm}, \code{pgnorm}, \code{qgnorm} and\code{rgnorm} are all parametrized as in Version 1 of the \href{https://en.wikipedia.org/wiki/Generalized_normal_distribution}{Generalized Normal Distribution Wikipedia page},
+which uses the parametrization given by in Nadarajah (2005).
+The same distribution was described much earlier by Subbotin (1923) and named the exponential power distribution by Box and Tiao (1973). \cr \cr
+Box, G. E. P. and G. C. Tiao. "Bayesian inference in Statistical Analysis." Addison-Wesley Pub. Co., Reading, Mass (1973). \cr
+Nadarajah, Saralees. "A generalized normal distribution." Journal of Applied Statistics 32.7 (2005): 685-694. \cr
+Subbotin, M. T. "On the Law of Frequency of Error." Mat. Sb. 31.2 (1923):  206-301.
 }
 \usage{
-\code{dgnorm(x, mu = 0, alpha = 1, beta = 1, log = FALSE)}
-\code{pgnorm(q, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE, log.p = FALSE)}
-\code{qgnorm(p, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE, log.p = FALSE)}
-\code{rgnorm(n, mu = 0, alpha = 1, beta = 1)}
+dgnorm(x, mu = 0, alpha = 1, beta = 1, log = FALSE)
+pgnorm(q, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE, log.p = FALSE)
+qgnorm(p, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE, log.p = FALSE)
+rgnorm(n, mu = 0, alpha = 1, beta = 1)
 }
 \arguments{
-\item{\code{x}}{vector of quantiles}
+\item{x, q}{vector of quantiles}
 
-\item{\code{p}}{vector of probabilities}
+\item{mu}{location parameter}
 
-\item{\code{n}}{number of observations}
+\item{alpha}{scale parameter}
 
-\item{\code{mu}}{location parameter}
+\item{beta}{shape parameter}
 
-\item{\code{alpha}}{scale parameter}
+\item{log, log.p}{logical; if TRUE, probabilities p are given as log(p)}
 
-\item{\code{beta}}{shape parameter}
+\item{p}{vector of probabilities}
+
+\item{n}{number of observations}
+
+\item{lower.tail}{logical; if TRUE (default), probabilities are \eqn{P[X\leq x]}, otherwise \eqn{P[X> x]}}
 }
 \description{
 Density, distribution function and random generation for the generalized normal/exponential power distribution. \cr \cr

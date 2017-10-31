@@ -12,7 +12,7 @@
 
 <meta name="author" content="Maryclare Griffin" />
 
-<meta name="date" content="2017-09-18" />
+<meta name="date" content="2017-10-30" />
 
 <title>Working with the Exponential Power Distribution Using gnorm</title>
 
@@ -70,14 +70,12 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Working with the Exponential Power Distribution Using <code>gnorm</code></h1>
 <h4 class="author"><em>Maryclare Griffin</em></h4>
-<h4 class="date"><em>2017-09-18</em></h4>
+<h4 class="date"><em>2017-10-30</em></h4>
 
 
 
-<p>The exponential power distribution, also known as the <a href="https://en.wikipedia.org/wiki/Generalized_normal_distribution">generalized normal distribution</a>, was first described in Subbotin (1923)<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> and rediscovered as the generalized normal distribution in Nadarajah (2005)<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>. It generalizes the Laplace, normal and uniform distributions and is pretty easy to work with in many ways, so it can be very useful. Accordingly, I’ve made a little <code>R</code> package called <code>gnorm</code> that provides density, CDF and quantile functions for the exponential power distribution as well as random variate generation that are analogous to <code>dnorm</code>, <code>pnorm</code>, <code>qnorm</code> and <code>rnorm</code>. We can load the package from GitHub as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(devtools)
-<span class="kw">install_github</span>(<span class="st">&quot;maryclare/gnorm&quot;</span>)
-<span class="kw">library</span>(gnorm)</code></pre></div>
+<p>The exponential power distribution, also known as the <a href="https://en.wikipedia.org/wiki/Generalized_normal_distribution">generalized normal distribution</a>, was first described in Subbotin (1923)<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> and rediscovered as the generalized normal distribution in Nadarajah (2005)<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>. It generalizes the Laplace, normal and uniform distributions and is pretty easy to work with in many ways, so it can be very useful. Accordingly, I’ve made a little <code>R</code> package called <code>gnorm</code> that provides density, CDF and quantile functions for the exponential power distribution as well as random variate generation that are analogous to <code>dnorm</code>, <code>pnorm</code>, <code>qnorm</code> and <code>rnorm</code>. We can load after installation as follows:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(gnorm)</code></pre></div>
 <p>Since we’re going to be generating some random variables, we should also set a seed:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">100</span>)</code></pre></div>
 <div id="exponential-power-density-dgnorm" class="section level3">

@@ -1,30 +1,32 @@
 #' The generalized normal distribution
 #'
 #' @name gnorm
-#'
 #' @description Density, distribution function and random generation for the generalized normal/exponential power distribution. \cr \cr
 #' A generalized normal random variable \eqn{x} with parameters \eqn{\mu}, \eqn{\alpha > 0} and \eqn{\beta > 0} has density:\cr
 #' \deqn{p(x) = \beta exp{-(|x - \mu|/\alpha)^\beta}/(2\alpha \Gamma(1/\beta)).} \cr
 #' The mean and variance of \eqn{x} are \eqn{\mu} and \eqn{\alpha^2 \Gamma(3/\beta)/\Gamma(1/\beta)}, respectively.
-#'
 #' @aliases dgnorm pgnorm qgnorm rgnorm
+#' @usage
+#' dgnorm(x, mu = 0, alpha = 1, beta = 1, log = FALSE)
+#' pgnorm(q, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE, log.p = FALSE)
+#' qgnorm(p, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE, log.p = FALSE)
+#' rgnorm(n, mu = 0, alpha = 1, beta = 1)
 #'
-#' @usage \code{dgnorm(x, mu = 0, alpha = 1, beta = 1, log = FALSE)}
-#' \code{pgnorm(q, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE, log.p = FALSE)}
-#' \code{qgnorm(p, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE, log.p = FALSE)}
-#' \code{rgnorm(n, mu = 0, alpha = 1, beta = 1)}
-#'
-#' @param \code{x, q} vector of quantiles
-#' @param \code{p} vector of probabilities
-#' @param \code{n} number of observations
-#' @param \code{mu} location parameter
-#' @param \code{alpha} scale parameter
-#' @param \code{beta} shape parameter
-#'
+#' @param x,q vector of quantiles
+#' @param p vector of probabilities
+#' @param n number of observations
+#' @param mu location parameter
+#' @param alpha scale parameter
+#' @param beta shape parameter
+#' @param log,log.p logical; if TRUE, probabilities p are given as log(p)
+#' @param lower.tail logical; if TRUE (default), probabilities are \eqn{P[X\leq x]}, otherwise \eqn{P[X> x]}
 #' @source \code{dgnorm}, \code{pgnorm}, \code{qgnorm} and\code{rgnorm} are all parametrized as in Version 1 of the \href{https://en.wikipedia.org/wiki/Generalized_normal_distribution}{Generalized Normal Distribution Wikipedia page},
-#' which uses the parametrization given by:
-#'
-#' Functions and documentation modeled after GammaDist functions
+#' which uses the parametrization given by in Nadarajah (2005).
+#' The same distribution was described much earlier by Subbotin (1923) and named the exponential power distribution by Box and Tiao (1973). \cr \cr
+#' Box, G. E. P. and G. C. Tiao. "Bayesian inference in Statistical Analysis." Addison-Wesley Pub. Co., Reading, Mass (1973). \cr
+#' Nadarajah, Saralees. "A generalized normal distribution." Journal of Applied Statistics 32.7 (2005): 685-694. \cr
+#' Subbotin, M. T. "On the Law of Frequency of Error." Mat. Sb. 31.2 (1923):  206-301.
+#' @importFrom stats pgamma qgamma rbinom runif
 #' @export
 dgnorm <- function(x, mu = 0, alpha = 1, beta = 1, log = FALSE) {
   if (alpha <= 0 | beta <= 0) {
@@ -38,13 +40,13 @@ dgnorm <- function(x, mu = 0, alpha = 1, beta = 1, log = FALSE) {
   }
 }
 #' @export
-pgnorm <- function(x, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE,
+pgnorm <- function(q, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE,
                    log.p = FALSE) {
   if (alpha <= 0 | beta <= 0) {
     cat("Not defined for negative values of alpha and/or beta.\n")
-    return(rep(NaN, length(x)))
+    return(rep(NaN, length(q)))
   }
-  p <- 1/2 + sign(x - mu)*pgamma(abs(x - mu)^beta, shape = 1/beta, rate = (1/alpha)^beta)/2
+  p <- 1/2 + sign(q - mu)*pgamma(abs(q - mu)^beta, shape = 1/beta, rate = (1/alpha)^beta)/2
   if (lower.tail) {
     if (!log.p) {
       return(p)
@@ -63,7 +65,7 @@ pgnorm <- function(x, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE,
 qgnorm <- function(p, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE, log.p = FALSE) {
   if (alpha <= 0 | beta <= 0) {
     cat("Not defined for negative values of alpha and/or beta.\n")
-    return(rep(NaN, n))
+    return(rep(NaN, p))
   }
   if (lower.tail & !log.p) {
     p <- p
