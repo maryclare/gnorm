@@ -13,7 +13,7 @@ which uses the parametrization given by in Nadarajah (2005).
 The same distribution was described much earlier by Subbotin (1923) and named the exponential power distribution by Box and Tiao (1973). \cr \cr
 Box, G. E. P. and G. C. Tiao. "Bayesian inference in Statistical Analysis." Addison-Wesley Pub. Co., Reading, Mass (1973). \cr
 Nadarajah, Saralees. "A generalized normal distribution." Journal of Applied Statistics 32.7 (2005): 685-694. \cr
-Subbotin, M. T. "On the Law of Frequency of Error." Mat. Sb. 31.2 (1923):  206-301.
+Subbotin, M. T. "On the Law of Frequency of Error." Matematicheskii Sbornik 31.2 (1923):  206-301.
 }
 \usage{
 dgnorm(x, mu = 0, alpha = 1, beta = 1, log = FALSE)
@@ -43,4 +43,28 @@ Density, distribution function and random generation for the generalized normal/
 A generalized normal random variable \eqn{x} with parameters \eqn{\mu}, \eqn{\alpha > 0} and \eqn{\beta > 0} has density:\cr
 \deqn{p(x) = \beta exp{-(|x - \mu|/\alpha)^\beta}/(2\alpha \Gamma(1/\beta)).} \cr
 The mean and variance of \eqn{x} are \eqn{\mu} and \eqn{\alpha^2 \Gamma(3/\beta)/\Gamma(1/\beta)}, respectively.
+}
+\examples{
+# Plot generalized normal/exponential power density
+# that corresponds to the standard normal density
+xs <- seq(-1, 1, length.out = 100)
+plot(xs, dgnorm(xs, mu = 0, alpha = sqrt(2), beta = 2), type = "l",
+     xlab = "x", ylab = expression(p(x)))
+
+# Plot the generalized normal/exponential power CDF
+# that corresponds to the standard normal CDF
+s <- seq(-1, 1, length.out = 100)
+plot(xs, pgnorm(xs, 0, sqrt(2), 2), type = "l", xlab = "q",
+     ylab = expression(paste("Pr(", x<=q, ")", sep = "")))
+
+# Plot the generalized normal/exponential power inverse CDF
+# that corresponds to the standard normal inverse CDF
+xs <- seq(0, 1, length.out = 100)
+plot(xs, qgnorm(xs, 0, sqrt(2), 2), type = "l", xlab = "p",
+     ylab = expression(paste("q: p = Pr(", x<=q, ")", sep = "")))
+
+# Make a histogram of draws from the generalized normal/exponential
+# power distribution that corresponds to a standard normal distribution
+xs <- rgnorm(100, 0, sqrt(2), 2)
+
 }

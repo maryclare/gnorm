@@ -25,8 +25,32 @@
 #' The same distribution was described much earlier by Subbotin (1923) and named the exponential power distribution by Box and Tiao (1973). \cr \cr
 #' Box, G. E. P. and G. C. Tiao. "Bayesian inference in Statistical Analysis." Addison-Wesley Pub. Co., Reading, Mass (1973). \cr
 #' Nadarajah, Saralees. "A generalized normal distribution." Journal of Applied Statistics 32.7 (2005): 685-694. \cr
-#' Subbotin, M. T. "On the Law of Frequency of Error." Mat. Sb. 31.2 (1923):  206-301.
+#' Subbotin, M. T. "On the Law of Frequency of Error." Matematicheskii Sbornik 31.2 (1923):  206-301.
 #' @importFrom stats pgamma qgamma rbinom runif
+#' @examples
+#' # Plot generalized normal/exponential power density
+#' # that corresponds to the standard normal density
+#' xs <- seq(-1, 1, length.out = 100)
+#' plot(xs, dgnorm(xs, mu = 0, alpha = sqrt(2), beta = 2), type = "l",
+#'      xlab = "x", ylab = expression(p(x)))
+#'
+#' # Plot the generalized normal/exponential power CDF
+#' # that corresponds to the standard normal CDF
+#' s <- seq(-1, 1, length.out = 100)
+#' plot(xs, pgnorm(xs, 0, sqrt(2), 2), type = "l", xlab = "q",
+#'      ylab = expression(paste("Pr(", x<=q, ")", sep = "")))
+#'
+#' # Plot the generalized normal/exponential power inverse CDF
+#' # that corresponds to the standard normal inverse CDF
+#' xs <- seq(0, 1, length.out = 100)
+#' plot(xs, qgnorm(xs, 0, sqrt(2), 2), type = "l", xlab = "p",
+#'      ylab = expression(paste("q: p = Pr(", x<=q, ")", sep = "")))
+#'
+#' # Make a histogram of draws from the generalized normal/exponential
+#' # power distribution that corresponds to a standard normal distribution
+#' xs <- rgnorm(100, 0, sqrt(2), 2)
+# 'hist(xs, xlab = "x", freq = FALSE, main = "Histogram of Draws")
+#'
 #' @export
 dgnorm <- function(x, mu = 0, alpha = 1, beta = 1, log = FALSE) {
   if (alpha <= 0 | beta <= 0) {
