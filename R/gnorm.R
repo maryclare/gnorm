@@ -53,20 +53,28 @@
 #'
 #' @export
 dgnorm <- function(x, mu = 0, alpha = 1, beta = 1, log = FALSE) {
-  if (alpha <= 0 | beta <= 0) {
-    cat("Not defined for negative values of alpha and/or beta.\n")
-    return(rep(NaN, length(x)))
+  # Create a vector to return and a vector of logical
+  gnormValues <- vector("numeric",max(length(x),length(mu),length(alpha),length(beta)))
+  valuesToSkip <- vector("logical",length(gnormValues))
+  # Do checks and substitute the unacceptable values by -Infinity
+  if (any(alpha <= 0) || any(beta <= 0)){
+    gnormValues[alpha <= 0] <- -Inf;
+    gnormValues[beta <= 0] <- -Inf;
+  }
+  else{
+    
   }
   if (!log) {
-    return(exp(-(abs(x - mu)/alpha)^beta)*beta/(2*alpha*gamma(1/beta)))
+    gnormValues <- exp(-(abs(x - mu)/alpha)^beta)*beta/(2*alpha*gamma(1/beta))
   } else {
-    return(-(abs(x - mu)/alpha)^beta + log(beta) - (log(2) + log(alpha) + log(gamma(1/beta))))
+    gnormValues <- -(abs(x - mu)/alpha)^beta + log(beta) - (log(2) + log(alpha) + log(gamma(1/beta)))
   }
+  return(gnormValues)
 }
 #' @export
 pgnorm <- function(q, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE,
                    log.p = FALSE) {
-  if (alpha <= 0 | beta <= 0) {
+  if (any(alpha <= 0) || any(beta <= 0)){
     cat("Not defined for negative values of alpha and/or beta.\n")
     return(rep(NaN, length(q)))
   }
@@ -87,7 +95,7 @@ pgnorm <- function(q, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE,
 }
 #' @export
 qgnorm <- function(p, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE, log.p = FALSE) {
-  if (alpha <= 0 | beta <= 0) {
+  if (any(alpha <= 0) || any(beta <= 0)){
     cat("Not defined for negative values of alpha and/or beta.\n")
     return(rep(NaN, p))
   }
@@ -106,7 +114,7 @@ qgnorm <- function(p, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE, log.p = FA
 }
 #' @export
 rgnorm <- function(n, mu = 0, alpha = 1, beta = 1) {
-  if (alpha <= 0 | beta <= 0) {
+  if (any(alpha <= 0) || any(beta <= 0)){
     cat("Not defined for negative values of alpha and/or beta.\n")
     return(rep(NaN, n))
   }
