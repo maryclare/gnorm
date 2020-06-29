@@ -1,3 +1,7 @@
+gnorm 1.0.1
+--------------------------------------------------------------------------------
+The functions now work properly with vectors and handle cases with non-positive alpha and beta correctly.
+
 gnorm 1.0.0
 --------------------------------------------------------------------------------
 
