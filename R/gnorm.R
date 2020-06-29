@@ -63,11 +63,25 @@ dgnorm <- function(x, mu = 0, alpha = 1, beta = 1,
   alpha <- rep(alpha,maxLength)[1:maxLength]
   beta <- rep(beta,maxLength)[1:maxLength]
   
+  # A failsafe for NaN / NAs of alpha / beta
+  if(any(is.nan(alpha))){
+    alpha[is.nan(alpha)] <- 0;
+  }
+  if(any(is.nan(beta))){
+    beta[is.nan(beta)] <- 0;
+  }
+  if(any(is.na(alpha))){
+    alpha[is.na(alpha)] <- 0;
+  }
+  if(any(is.na(beta))){
+    beta[is.na(beta)] <- 0;
+  }
+  
   # Do checks and substitute the unacceptable values by -Infinity
   if (any(alpha <= 0) || any(beta <= 0)){
     valuesToUse[] <- !(alpha <= 0 | beta <= 0)
     gnormValues[!valuesToUse] <- NaN
-    warning("NaNs produced: not defined for negative values of alpha and/or beta")
+    warning("NaNs produced")
   }
   if (!log) {
     gnormValues[valuesToUse] <- (exp(-(abs(x[valuesToUse]-mu[valuesToUse])/
@@ -93,11 +107,24 @@ pgnorm <- function(q, mu = 0, alpha = 1, beta = 1,
   alpha <- rep(alpha,maxLength)[1:maxLength]
   beta <- rep(beta,maxLength)[1:maxLength]
   
+  # A failsafe for NaN / NAs of alpha / beta
+  if(any(is.nan(alpha))){
+    alpha[is.nan(alpha)] <- 0;
+  }
+  if(any(is.nan(beta))){
+    beta[is.nan(beta)] <- 0;
+  }
+  if(any(is.na(alpha))){
+    alpha[is.na(alpha)] <- 0;
+  }
+  if(any(is.na(beta))){
+    beta[is.na(beta)] <- 0;
+  }
   # Do checks and substitute the unacceptable values by -Infinity
   if (any(alpha <= 0) || any(beta <= 0)){
     valuesToUse[] <- !(alpha <= 0 | beta <= 0)
     p[!valuesToUse] <- NaN
-    warning("NaNs produced: not defined for negative values of alpha and/or beta")
+    warning("NaNs produced")
   }
   
   p[valuesToUse] <- (1/2 + sign(q[valuesToUse] - mu[valuesToUse])*
@@ -131,11 +158,24 @@ qgnorm <- function(p, mu = 0, alpha = 1, beta = 1,
   alpha <- rep(alpha,maxLength)[1:maxLength]
   beta <- rep(beta,maxLength)[1:maxLength]
   
+  # A failsafe for NaN / NAs of alpha / beta
+  if(any(is.nan(alpha))){
+    alpha[is.nan(alpha)] <- 0;
+  }
+  if(any(is.nan(beta))){
+    beta[is.nan(beta)] <- 0;
+  }
+  if(any(is.na(alpha))){
+    alpha[is.na(alpha)] <- 0;
+  }
+  if(any(is.na(beta))){
+    beta[is.na(beta)] <- 0;
+  }
   # Do checks and substitute the unacceptable values by -Infinity
   if (any(alpha <= 0) || any(beta <= 0)){
     valuesToUse[] <- !(alpha <= 0 | beta <= 0)
     gnormValues[!valuesToUse] <- NaN
-    warning("NaNs produced: not defined for negative values of alpha and/or beta")
+    warning("NaNs produced")
   }
   
   if (lower.tail & !log.p) {
@@ -165,11 +205,24 @@ rgnorm <- function(n, mu = 0, alpha = 1, beta = 1) {
   alpha <- rep(alpha,maxLength)[1:maxLength]
   beta <- rep(beta,maxLength)[1:maxLength]
   
+  # A failsafe for NaN / NAs of alpha / beta
+  if(any(is.nan(alpha))){
+    alpha[is.nan(alpha)] <- 0;
+  }
+  if(any(is.nan(beta))){
+    beta[is.nan(beta)] <- 0;
+  }
+  if(any(is.na(alpha))){
+    alpha[is.na(alpha)] <- 0;
+  }
+  if(any(is.na(beta))){
+    beta[is.na(beta)] <- 0;
+  }
   # Do checks and substitute the unacceptable values by -Infinity
   if (any(alpha <= 0) || any(beta <= 0)){
     valuesToUse[] <- !(alpha <= 0 | beta <= 0)
     gnormValues[!valuesToUse] <- NaN
-    warning("NaNs produced: not defined for negative values of alpha and/or beta")
+    warning("NaNs produced")
   }
   
   lambda <- (1/alpha[valuesToUse])^beta[valuesToUse]
