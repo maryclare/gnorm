@@ -58,6 +58,7 @@ dgnorm <- function(x, mu = 0, alpha = 1, beta = 1,
   # Create a vector to return and a vector of logical
   gnormValues <- vector("numeric",maxLength)
   valuesToUse <- vector("logical",maxLength)
+  valuesToUse[] <- TRUE
   x <- rep(x,maxLength)[1:maxLength]
   mu <- rep(mu,maxLength)[1:maxLength]
   alpha <- rep(alpha,maxLength)[1:maxLength]
@@ -102,6 +103,7 @@ pgnorm <- function(q, mu = 0, alpha = 1, beta = 1,
   # Create a vector to return and a vector of logical
   p <- vector("numeric",maxLength)
   valuesToUse <- vector("logical",maxLength)
+  valuesToUse[] <- TRUE
   q <- rep(q,maxLength)[1:maxLength]
   mu <- rep(mu,maxLength)[1:maxLength]
   alpha <- rep(alpha,maxLength)[1:maxLength]
@@ -153,6 +155,7 @@ qgnorm <- function(p, mu = 0, alpha = 1, beta = 1,
   # Create a vector to return and a vector of logical
   gnormValues <- vector("numeric",maxLength)
   valuesToUse <- vector("logical",maxLength)
+  valuesToUse[] <- TRUE
   p <- rep(p,maxLength)[1:maxLength]
   mu <- rep(mu,maxLength)[1:maxLength]
   alpha <- rep(alpha,maxLength)[1:maxLength]
@@ -201,6 +204,7 @@ rgnorm <- function(n, mu = 0, alpha = 1, beta = 1) {
   # Create a vector to return and a vector of logical
   gnormValues <- vector("numeric",maxLength)
   valuesToUse <- vector("logical",maxLength)
+  valuesToUse[] <- TRUE
   mu <- rep(mu,maxLength)[1:maxLength]
   alpha <- rep(alpha,maxLength)[1:maxLength]
   beta <- rep(beta,maxLength)[1:maxLength]
