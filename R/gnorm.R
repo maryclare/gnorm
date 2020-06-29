@@ -53,21 +53,33 @@
 #'
 #' @export
 dgnorm <- function(x, mu = 0, alpha = 1, beta = 1, log = FALSE) {
+  maxLength <- max(length(x),length(mu),length(alpha),length(beta))
   # Create a vector to return and a vector of logical
-  gnormValues <- vector("numeric",max(length(x),length(mu),length(alpha),length(beta)))
-  valuesToSkip <- vector("logical",length(gnormValues))
+  gnormValues <- vector("numeric",maxLength)
+  valuesToUse <- vector("logical",maxLength)
+  x <- rep(x,maxLength)[1:maxLength];
+  mu <- rep(mu,maxLength)[1:maxLength];
+  alpha <- rep(alpha,maxLength)[1:maxLength];
+  beta <- rep(beta,maxLength)[1:maxLength];
+  
   # Do checks and substitute the unacceptable values by -Infinity
   if (any(alpha <= 0) || any(beta <= 0)){
-    gnormValues[alpha <= 0] <- -Inf;
-    gnormValues[beta <= 0] <- -Inf;
-  }
-  else{
-    
+    valuesToUse[] <- !(alpha <= 0 | beta <= 0);
+    if(log){
+      gnormValues[!valuesToUse] <- -Inf;
+    }
+    else{
+      gnormValues[!valuesToUse] <- 0;
+    }
   }
   if (!log) {
-    gnormValues <- exp(-(abs(x - mu)/alpha)^beta)*beta/(2*alpha*gamma(1/beta))
+    gnormValues[valuesToUse] <- (exp(-(abs(x[valuesToUse]-mu[valuesToUse])/
+                                         alpha[valuesToUse])^beta[valuesToUse])*
+                                   beta[valuesToUse]/(2*alpha[valuesToUse]*gamma(1/beta[valuesToUse])))
   } else {
-    gnormValues <- -(abs(x - mu)/alpha)^beta + log(beta) - (log(2) + log(alpha) + log(gamma(1/beta)))
+    gnormValues[valuesToUse] <- -((abs(x[valuesToUse] - mu[valuesToUse])/alpha[valuesToUse])^beta[valuesToUse] +
+                                    log(beta[valuesToUse]) - (log(2) + log(alpha[valuesToUse]) +
+                                                                log(gamma(1/beta[valuesToUse]))))
   }
   return(gnormValues)
 }
@@ -108,7 +120,7 @@ qgnorm <- function(p, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE, log.p = FA
   } else {
     p <- log(1 - p)
   }
-
+  
   lambda <- (1/alpha)^beta
   return(sign(p - 0.5)*qgamma(abs(p - 0.5)*2, shape = 1/beta, scale = 1/lambda)^(1/beta) + mu)
 }
