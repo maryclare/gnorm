@@ -89,7 +89,7 @@ dgnorm <- function(x, mu = 0, alpha = 1, beta = 1,
                                          alpha[valuesToUse])^beta[valuesToUse])*
                                    beta[valuesToUse]/(2*alpha[valuesToUse]*gamma(1/beta[valuesToUse])))
   } else {
-    gnormValues[valuesToUse] <- -((abs(x[valuesToUse] - mu[valuesToUse])/alpha[valuesToUse])^beta[valuesToUse] +
+    gnormValues[valuesToUse] <- (-(abs(x[valuesToUse] - mu[valuesToUse])/alpha[valuesToUse])^beta[valuesToUse] +
                                     log(beta[valuesToUse]) - (log(2) + log(alpha[valuesToUse]) +
                                                                 log(gamma(1/beta[valuesToUse]))))
   }
