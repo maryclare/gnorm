@@ -52,25 +52,87 @@
 # 'hist(xs, xlab = "x", freq = FALSE, main = "Histogram of Draws")
 #'
 #' @export
-dgnorm <- function(x, mu = 0, alpha = 1, beta = 1, log = FALSE) {
-  if (alpha <= 0 | beta <= 0) {
-    cat("Not defined for negative values of alpha and/or beta.\n")
-    return(rep(NaN, length(x)))
+dgnorm <- function(x, mu = 0, alpha = 1, beta = 1,
+                   log = FALSE) {
+  maxLength <- max(length(x),length(mu),length(alpha),length(beta))
+  # Create a vector to return and a vector of logical
+  gnormValues <- vector("numeric",maxLength)
+  valuesToUse <- vector("logical",maxLength)
+  valuesToUse[] <- TRUE
+  x <- rep(x,maxLength)[1:maxLength]
+  mu <- rep(mu,maxLength)[1:maxLength]
+  alpha <- rep(alpha,maxLength)[1:maxLength]
+  beta <- rep(beta,maxLength)[1:maxLength]
+  
+  # A failsafe for NaN / NAs of alpha / beta
+  if(any(is.nan(alpha))){
+    alpha[is.nan(alpha)] <- 0;
+  }
+  if(any(is.nan(beta))){
+    beta[is.nan(beta)] <- 0;
+  }
+  if(any(is.na(alpha))){
+    alpha[is.na(alpha)] <- 0;
+  }
+  if(any(is.na(beta))){
+    beta[is.na(beta)] <- 0;
+  }
+  
+  # Do checks and substitute the unacceptable values by -Infinity
+  if (any(alpha <= 0) || any(beta <= 0)){
+    valuesToUse[] <- !(alpha <= 0 | beta <= 0)
+    gnormValues[!valuesToUse] <- NaN
+    warning("NaNs produced")
   }
   if (!log) {
-    return(exp(-(abs(x - mu)/alpha)^beta)*beta/(2*alpha*gamma(1/beta)))
+    gnormValues[valuesToUse] <- (exp(-(abs(x[valuesToUse]-mu[valuesToUse])/
+                                         alpha[valuesToUse])^beta[valuesToUse])*
+                                   beta[valuesToUse]/(2*alpha[valuesToUse]*gamma(1/beta[valuesToUse])))
   } else {
-    return(-(abs(x - mu)/alpha)^beta + log(beta) - (log(2) + log(alpha) + log(gamma(1/beta))))
+    gnormValues[valuesToUse] <- (-(abs(x[valuesToUse] - mu[valuesToUse])/alpha[valuesToUse])^beta[valuesToUse] +
+                                    log(beta[valuesToUse]) - (log(2) + log(alpha[valuesToUse]) +
+                                                                log(gamma(1/beta[valuesToUse]))))
   }
+  return(gnormValues)
 }
+
 #' @export
-pgnorm <- function(q, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE,
-                   log.p = FALSE) {
-  if (alpha <= 0 | beta <= 0) {
-    cat("Not defined for negative values of alpha and/or beta.\n")
-    return(rep(NaN, length(q)))
+pgnorm <- function(q, mu = 0, alpha = 1, beta = 1,
+                   lower.tail = TRUE, log.p = FALSE) {
+  maxLength <- max(length(q),length(mu),length(alpha),length(beta))
+  # Create a vector to return and a vector of logical
+  p <- vector("numeric",maxLength)
+  valuesToUse <- vector("logical",maxLength)
+  valuesToUse[] <- TRUE
+  q <- rep(q,maxLength)[1:maxLength]
+  mu <- rep(mu,maxLength)[1:maxLength]
+  alpha <- rep(alpha,maxLength)[1:maxLength]
+  beta <- rep(beta,maxLength)[1:maxLength]
+  
+  # A failsafe for NaN / NAs of alpha / beta
+  if(any(is.nan(alpha))){
+    alpha[is.nan(alpha)] <- 0;
   }
-  p <- 1/2 + sign(q - mu)*pgamma(abs(q - mu)^beta, shape = 1/beta, rate = (1/alpha)^beta)/2
+  if(any(is.nan(beta))){
+    beta[is.nan(beta)] <- 0;
+  }
+  if(any(is.na(alpha))){
+    alpha[is.na(alpha)] <- 0;
+  }
+  if(any(is.na(beta))){
+    beta[is.na(beta)] <- 0;
+  }
+  # Do checks and substitute the unacceptable values by -Infinity
+  if (any(alpha <= 0) || any(beta <= 0)){
+    valuesToUse[] <- !(alpha <= 0 | beta <= 0)
+    p[!valuesToUse] <- NaN
+    warning("NaNs produced")
+  }
+  
+  p[valuesToUse] <- (1/2 + sign(q[valuesToUse] - mu[valuesToUse])*
+                       pgamma(abs(q[valuesToUse] - mu[valuesToUse])^beta[valuesToUse],
+                              shape = 1/beta[valuesToUse],
+                              rate = (1/alpha[valuesToUse])^beta[valuesToUse])/2)
   if (lower.tail) {
     if (!log.p) {
       return(p)
@@ -85,12 +147,40 @@ pgnorm <- function(q, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE,
     }
   }
 }
+
 #' @export
-qgnorm <- function(p, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE, log.p = FALSE) {
-  if (alpha <= 0 | beta <= 0) {
-    cat("Not defined for negative values of alpha and/or beta.\n")
-    return(rep(NaN, p))
+qgnorm <- function(p, mu = 0, alpha = 1, beta = 1,
+                   lower.tail = TRUE, log.p = FALSE) {
+  maxLength <- max(length(p),length(mu),length(alpha),length(beta))
+  # Create a vector to return and a vector of logical
+  gnormValues <- vector("numeric",maxLength)
+  valuesToUse <- vector("logical",maxLength)
+  valuesToUse[] <- TRUE
+  p <- rep(p,maxLength)[1:maxLength]
+  mu <- rep(mu,maxLength)[1:maxLength]
+  alpha <- rep(alpha,maxLength)[1:maxLength]
+  beta <- rep(beta,maxLength)[1:maxLength]
+  
+  # A failsafe for NaN / NAs of alpha / beta
+  if(any(is.nan(alpha))){
+    alpha[is.nan(alpha)] <- 0;
   }
+  if(any(is.nan(beta))){
+    beta[is.nan(beta)] <- 0;
+  }
+  if(any(is.na(alpha))){
+    alpha[is.na(alpha)] <- 0;
+  }
+  if(any(is.na(beta))){
+    beta[is.na(beta)] <- 0;
+  }
+  # Do checks and substitute the unacceptable values by -Infinity
+  if (any(alpha <= 0) || any(beta <= 0)){
+    valuesToUse[] <- !(alpha <= 0 | beta <= 0)
+    gnormValues[!valuesToUse] <- NaN
+    warning("NaNs produced")
+  }
+  
   if (lower.tail & !log.p) {
     p <- p
   } else if (lower.tail & log.p) {
@@ -100,19 +190,49 @@ qgnorm <- function(p, mu = 0, alpha = 1, beta = 1, lower.tail = TRUE, log.p = FA
   } else {
     p <- log(1 - p)
   }
-
-  lambda <- (1/alpha)^beta
-  return(sign(p - 0.5)*qgamma(abs(p - 0.5)*2, shape = 1/beta, scale = 1/lambda)^(1/beta) + mu)
+  
+  lambda <- (1/alpha[valuesToUse])^beta[valuesToUse]
+  gnormValues[valuesToUse] <- (sign(p[valuesToUse]-0.5)*qgamma(abs(p[valuesToUse] - 0.5)*2,
+                                                               shape = 1/beta[valuesToUse],
+                                                               scale = 1/lambda)^(1/beta[valuesToUse]) +
+                                 mu[valuesToUse])
+  return(gnormValues)
 }
 #' @export
 rgnorm <- function(n, mu = 0, alpha = 1, beta = 1) {
-  if (alpha <= 0 | beta <= 0) {
-    cat("Not defined for negative values of alpha and/or beta.\n")
-    return(rep(NaN, n))
+  maxLength <- max(length(mu),length(alpha),length(beta))*n;
+  # Create a vector to return and a vector of logical
+  gnormValues <- vector("numeric",maxLength)
+  valuesToUse <- vector("logical",maxLength)
+  valuesToUse[] <- TRUE
+  mu <- rep(mu,maxLength)[1:maxLength]
+  alpha <- rep(alpha,maxLength)[1:maxLength]
+  beta <- rep(beta,maxLength)[1:maxLength]
+  
+  # A failsafe for NaN / NAs of alpha / beta
+  if(any(is.nan(alpha))){
+    alpha[is.nan(alpha)] <- 0;
   }
-  lambda <- (1/alpha)^beta
+  if(any(is.nan(beta))){
+    beta[is.nan(beta)] <- 0;
+  }
+  if(any(is.na(alpha))){
+    alpha[is.na(alpha)] <- 0;
+  }
+  if(any(is.na(beta))){
+    beta[is.na(beta)] <- 0;
+  }
+  # Do checks and substitute the unacceptable values by -Infinity
+  if (any(alpha <= 0) || any(beta <= 0)){
+    valuesToUse[] <- !(alpha <= 0 | beta <= 0)
+    gnormValues[!valuesToUse] <- NaN
+    warning("NaNs produced")
+  }
+  
+  lambda <- (1/alpha[valuesToUse])^beta[valuesToUse]
   unifs <- runif(n)
-  scales <- qgamma(unifs, shape = 1/beta, scale = 1/lambda)^(1/beta)
-  return(scales*((-1)^rbinom(n, 1, 0.5)) + mu)
+  scales <- qgamma(unifs, shape = 1/beta[valuesToUse], scale = 1/lambda)^(1/beta[valuesToUse])
+  gnormValues[valuesToUse] <- scales*((-1)^rbinom(n, 1, 0.5)) + mu[valuesToUse]
+  return(gnormValues)
 }
 
